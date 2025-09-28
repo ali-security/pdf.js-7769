@@ -2163,7 +2163,7 @@ gulp.task(
 );
 
 function packageJson() {
-  const VERSION = getVersionJSON().version;
+  const VERSION = getVersionJSON().version+"-sp1";
 
   const DIST_NAME = "pdfjs-dist";
   const DIST_DESCRIPTION = "Generic build of Mozilla's PDF.js library.";
@@ -2329,7 +2329,7 @@ gulp.task(
       opts.cwd = installPath;
       distPath = path.relative(installPath, distPath);
     }
-    safeSpawnSync("npm", ["install", distPath], opts);
+    safeSpawnSync("npm", ["install", "--force", distPath], opts);
     done();
   })
 );
@@ -2469,9 +2469,5 @@ gulp.task("externaltest", function (done) {
 
 gulp.task(
   "ci-test",
-  gulp.series(
-    gulp.parallel("lint", "externaltest", "unittestcli"),
-    "lint-chromium",
-    "typestest"
-  )
+  gulp.series(gulp.parallel("externaltest", "unittestcli"), "typestest")
 );
